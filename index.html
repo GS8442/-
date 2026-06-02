@@ -1,128 +1,129 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.outer{background:#FFF9E6;min-height:100vh;padding:0;position:relative;overflow:hidden}
+html,body{width:100%;font-family:var(--font-sans)}
+.outer{background:#FFF9E6;min-height:100vh;position:relative;overflow-x:hidden}
 .bg-deco{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.content{position:relative;z-index:1;padding:10px 12px 28px}
-.header-box{background:#E24B4A;border-radius:16px;padding:12px 16px 10px;text-align:center;margin-bottom:12px;cursor:pointer;user-select:none}
-.header-box .ttl{font-size:22px;font-weight:500;color:#fff;letter-spacing:0.04em}
-.header-box .sub{font-size:12px;color:#ffd6d6;margin-top:2px}
-.remain-card{background:#fff;border-radius:14px;border:1.5px solid #FAC775;padding:10px 12px;margin-bottom:12px}
-.remain-title{font-size:12px;font-weight:500;color:#854F0B;margin-bottom:8px}
+.content{position:relative;z-index:1;padding:clamp(8px,3vw,16px);display:flex;flex-direction:column;gap:10px;max-width:600px;margin:0 auto}
+.header-box{background:#E24B4A;border-radius:clamp(10px,3vw,16px);padding:clamp(8px,2.5vw,14px) clamp(10px,3vw,18px);text-align:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.header-box .ttl{font-size:clamp(15px,4.5vw,22px);font-weight:500;color:#fff;letter-spacing:0.04em}
+.header-box .sub{font-size:clamp(10px,2.5vw,12px);color:#ffd6d6;margin-top:2px}
+.card{background:#fff;border-radius:clamp(10px,3vw,14px);border:1.5px solid #FAC775;padding:clamp(8px,2.5vw,12px) clamp(10px,3vw,14px)}
+.card-title{font-size:clamp(11px,2.8vw,13px);font-weight:500;color:#854F0B;margin-bottom:8px}
 .remain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.remain-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:9px;border:1px solid #FAC775;background:#FFF9E6}
-.rdot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
-.rname{font-size:12px;color:#3C2A00;flex:1;min-width:0;line-height:1.3}
-.rnum{font-size:15px;font-weight:500;color:#E24B4A;min-width:28px;text-align:right}
-.ticket-area{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.ticket-area label{font-size:14px;font-weight:500;color:#3C2A00}
-.ticket-area input[type=number]{width:70px;font-size:16px;font-weight:500;padding:6px 8px;border:1.5px solid #FAC775;border-radius:9px;background:#fff;color:#3C2A00;text-align:center}
-.ticket-badge{font-size:13px;color:#854F0B;background:#FAEEDA;border-radius:20px;padding:3px 12px}
-.spin-center{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px}
-.machine-wrap{position:relative;width:240px;height:240px}
+.remain-item{display:flex;align-items:center;gap:6px;padding:clamp(4px,1.5vw,7px) clamp(6px,2vw,9px);border-radius:8px;border:1px solid #FAC775;background:#FFF9E6}
+.rdot{width:clamp(10px,2.5vw,13px);height:clamp(10px,2.5vw,13px);border-radius:50%;flex-shrink:0}
+.rname{font-size:clamp(10px,2.5vw,12px);color:#3C2A00;flex:1;min-width:0;line-height:1.3}
+.rnum{font-size:clamp(13px,3.5vw,16px);font-weight:500;color:#E24B4A;min-width:24px;text-align:right}
+.ticket-row{display:flex;align-items:center;gap:clamp(6px,2vw,10px);flex-wrap:wrap}
+.ticket-row label{font-size:clamp(13px,3.5vw,15px);font-weight:500;color:#3C2A00}
+.ticket-row input[type=number]{width:clamp(60px,16vw,75px);font-size:clamp(15px,4vw,17px);font-weight:500;padding:6px 8px;border:1.5px solid #FAC775;border-radius:9px;background:#fff;color:#3C2A00;text-align:center}
+.ticket-badge{font-size:clamp(11px,3vw,13px);color:#854F0B;background:#FAEEDA;border-radius:20px;padding:3px 12px}
+.spin-center{display:flex;flex-direction:column;align-items:center;gap:8px}
+.machine-wrap{width:clamp(180px,55vw,260px);height:clamp(180px,55vw,260px)}
 .machine-wrap svg{width:100%;height:100%}
-#spinBtn{font-size:18px;font-weight:500;padding:14px 48px;border-radius:40px;border:none;background:#E24B4A;color:#fff;cursor:pointer;letter-spacing:0.08em;transition:transform 0.12s,opacity 0.15s}
-#spinBtn:disabled{opacity:0.38;cursor:default}
-#spinBtn:not(:disabled):hover{opacity:0.88}
-#spinBtn:not(:disabled):active{transform:scale(0.96)}
-.result-area{min-height:50px;display:flex;align-items:center;justify-content:center}
-.rbadge{font-size:17px;font-weight:500;padding:8px 22px;border-radius:40px;text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.6,1) both}
-@keyframes pop{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
-.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px}
-.stats-row2{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.sc{background:#fff;border-radius:10px;border:1.5px solid #FAC775;padding:7px 8px;text-align:center}
-.sc-lbl{font-size:11px;color:#854F0B;margin-bottom:2px}
-.sc-val{font-size:19px;font-weight:500;color:#3C2A00}
-.sc-pt{background:#fff;border-radius:10px;border:2px solid #888780;padding:7px 8px;text-align:center;grid-column:1/-1}
-.sc-pt .sc-lbl{color:#5F5E5A}
-.sc-pt .sc-val{font-size:22px;color:#444441}
-.pt-sub{font-size:11px;color:#888780;margin-top:2px}
-.log-card{background:#fff;border-radius:14px;border:1.5px solid #FAC775;padding:10px 12px}
+#spinBtn{font-size:clamp(15px,4.5vw,19px);font-weight:500;padding:clamp(11px,3vw,15px) clamp(32px,10vw,52px);border-radius:40px;border:none;background:#E24B4A;color:#fff;cursor:pointer;letter-spacing:0.08em;transition:transform .12s,opacity .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#spinBtn:disabled{opacity:.38;cursor:default}
+#spinBtn:not(:disabled):active{transform:scale(.95);opacity:.88}
+.result-area{min-height:44px;display:flex;align-items:center;justify-content:center}
+.rbadge{font-size:clamp(14px,4vw,18px);font-weight:500;padding:8px 20px;border-radius:40px;text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.6,1) both}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.sc{background:#fff;border-radius:10px;border:1.5px solid #FAC775;padding:clamp(6px,2vw,9px) clamp(8px,2.5vw,10px);text-align:center}
+.sc-lbl{font-size:clamp(10px,2.5vw,12px);color:#854F0B;margin-bottom:2px}
+.sc-val{font-size:clamp(16px,4.5vw,20px);font-weight:500;color:#3C2A00}
+.sc-wide{grid-column:1/-1;border-color:#888780}
+.sc-wide .sc-lbl{color:#5F5E5A}
+.sc-wide .sc-val{font-size:clamp(18px,5vw,23px);color:#444441}
+.log-card{background:#fff;border-radius:clamp(10px,3vw,14px);border:1.5px solid #FAC775;padding:clamp(8px,2.5vw,12px) clamp(10px,3vw,14px)}
 .log-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.log-header span{font-size:13px;font-weight:500;color:#3C2A00}
-.rbtn{font-size:12px;color:#854F0B;background:#FAEEDA;border:none;border-radius:6px;padding:3px 10px;cursor:pointer}
-.rbtn:hover{background:#FAC775}
-.log-list{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
-.li{display:flex;align-items:center;gap:7px;font-size:13px;color:#3C2A00;padding:4px 0;border-bottom:0.5px dashed #FAC775}
-.li:last-child{border-bottom:none}
-.li-num{font-size:11px;color:#BA7517;min-width:22px}
-.li-pt{font-size:11px;color:#888780;margin-left:auto;white-space:nowrap}
-.empty{font-size:13px;color:#BA7517;text-align:center;padding:12px 0}
-.settings-overlay{display:none;position:absolute;top:0;left:0;width:100%;min-height:100%;background:rgba(0,0,0,0.55);z-index:100;align-items:flex-start;justify-content:center;padding:20px 12px}
+.log-header span{font-size:clamp(12px,3.2vw,14px);font-weight:500;color:#3C2A00}
+.rbtn{font-size:clamp(11px,2.8vw,13px);color:#854F0B;background:#FAEEDA;border:none;border-radius:6px;padding:4px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rbtn:active{background:#FAC775}
+.log-list{display:flex;flex-direction:column;gap:4px}
+.li{display:flex;align-items:center;gap:8px;padding:clamp(6px,2vw,9px) clamp(8px,2.5vw,10px);border-radius:8px;border:1px solid #FAC775;background:#FFF9E6}
+.li-dot{width:clamp(10px,2.5vw,13px);height:clamp(10px,2.5vw,13px);border-radius:50%;flex-shrink:0}
+.li-name{font-size:clamp(12px,3vw,14px);color:#3C2A00;flex:1;min-width:0}
+.li-qty{font-size:clamp(13px,3.5vw,15px);font-weight:500;color:#E24B4A;white-space:nowrap}
+.li-pt{font-size:clamp(10px,2.5vw,12px);color:#888780;white-space:nowrap}
+.empty{font-size:clamp(12px,3vw,14px);color:#BA7517;text-align:center;padding:14px 0}
+.settings-overlay{display:none;position:absolute;top:0;left:0;width:100%;min-height:100%;background:rgba(0,0,0,.55);z-index:100;justify-content:center;padding:16px 10px}
 .settings-overlay.open{display:flex}
-.settings-box{background:#fff;border-radius:18px;padding:16px;width:100%;max-width:640px;margin:auto}
-.settings-box h3{font-size:16px;font-weight:500;color:#3C2A00;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
-.close-btn{font-size:13px;color:#854F0B;background:#FAEEDA;border:none;border-radius:7px;padding:4px 12px;cursor:pointer}
-.prize-row-s{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px dashed #FAC775}
+.settings-box{background:#fff;border-radius:18px;padding:clamp(12px,4vw,18px);width:100%;max-width:560px;margin:auto}
+.settings-box h3{font-size:clamp(14px,4vw,16px);font-weight:500;color:#3C2A00;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.close-btn{font-size:clamp(11px,3vw,13px);color:#854F0B;background:#FAEEDA;border:none;border-radius:7px;padding:5px 14px;cursor:pointer}
+.prize-row-s{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:.5px dashed #FAC775}
 .prize-row-s:last-child{border-bottom:none}
-.sdot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
-.sname{font-size:13px;font-weight:500;color:#3C2A00;flex:1;min-width:0}
-.s-inputs{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.s-inputs input[type=number]{width:58px;font-size:13px;padding:3px 5px;border:1px solid #FAC775;border-radius:7px;background:#FFF9E6;color:#3C2A00;text-align:center}
-.s-inputs input[type=range]{width:80px;accent-color:#E24B4A}
-.prob-pct{font-size:12px;font-weight:500;color:#E24B4A;min-width:38px;text-align:right}
-.slbl{font-size:11px;color:#854F0B}
-.win-overlay{display:none;position:absolute;top:0;left:0;width:100%;min-height:100%;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.6)}
+.prize-row-s-top{display:flex;align-items:center;gap:7px}
+.sdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.sname{font-size:clamp(12px,3.2vw,13px);font-weight:500;color:#3C2A00;flex:1}
+.s-inputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.s-inputs input[type=number]{width:clamp(54px,14vw,64px);font-size:13px;padding:4px 6px;border:1px solid #FAC775;border-radius:7px;background:#FFF9E6;color:#3C2A00;text-align:center}
+.s-inputs input[type=range]{flex:1;min-width:80px;accent-color:#E24B4A}
+.prob-pct{font-size:12px;font-weight:500;color:#E24B4A;min-width:40px;text-align:right}
+.slbl{font-size:11px;color:#854F0B;white-space:nowrap}
+.win-overlay{display:none;position:absolute;top:0;left:0;width:100%;min-height:100%;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,.65)}
 .win-overlay.open{display:flex}
-.win-box{border-radius:24px;padding:28px 20px;text-align:center;animation:popbig .5s cubic-bezier(.2,1.4,.6,1) both;max-width:320px;width:92%;position:relative}
-@keyframes popbig{from{transform:scale(0.2);opacity:0}to{transform:scale(1);opacity:1}}
-.win-title{font-size:32px;font-weight:500;margin-bottom:6px}
-.win-prize{font-size:20px;font-weight:500;margin-bottom:8px}
-.win-close{font-size:14px;padding:9px 30px;border-radius:30px;border:none;cursor:pointer;margin-top:10px;font-weight:500}
+.win-box{border-radius:24px;padding:clamp(20px,6vw,32px) clamp(16px,5vw,24px);text-align:center;animation:popbig .5s cubic-bezier(.2,1.4,.6,1) both;max-width:min(90vw,340px);width:92%;position:relative}
+@keyframes popbig{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+.win-title{font-size:clamp(22px,7vw,34px);font-weight:500;margin-bottom:6px}
+.win-prize{font-size:clamp(16px,5vw,21px);font-weight:500;margin-bottom:8px}
+.win-close{font-size:clamp(13px,3.5vw,15px);padding:10px 34px;border-radius:30px;border:none;cursor:pointer;margin-top:12px;font-weight:500;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .confetti-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:24px}
 .cf{position:absolute;width:10px;height:10px;border-radius:2px;animation:fall linear forwards}
-@keyframes fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(200px) rotate(720deg);opacity:0}}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(220px) rotate(720deg);opacity:0}}
 </style>
 
 <div class="outer" id="outerDiv">
-<svg class="bg-deco" viewBox="0 0 680 1600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-  <circle cx="30" cy="60" r="36" fill="#FAC775" opacity=".55"/>
-  <circle cx="650" cy="40" r="28" fill="#F09595" opacity=".55"/>
-  <circle cx="340" cy="20" r="22" fill="#9FE1CB" opacity=".5"/>
-  <circle cx="600" cy="180" r="44" fill="#B5D4F4" opacity=".45"/>
-  <circle cx="60" cy="260" r="30" fill="#ED93B1" opacity=".4"/>
-  <circle cx="660" cy="400" r="38" fill="#FAC775" opacity=".4"/>
-  <circle cx="20" cy="530" r="26" fill="#9FE1CB" opacity=".38"/>
-  <circle cx="640" cy="680" r="32" fill="#F09595" opacity=".38"/>
-  <circle cx="350" cy="600" r="20" fill="#B5D4F4" opacity=".35"/>
-  <circle cx="80" cy="800" r="34" fill="#FAC775" opacity=".35"/>
-  <circle cx="630" cy="950" r="26" fill="#ED93B1" opacity=".35"/>
-  <circle cx="40" cy="1100" r="30" fill="#9FE1CB" opacity=".32"/>
-  <circle cx="660" cy="1250" r="36" fill="#FAC775" opacity=".32"/>
-  <circle cx="300" cy="1400" r="24" fill="#F09595" opacity=".3"/>
-  <polygon points="120,80 140,110 100,110" fill="#E24B4A" opacity=".22"/>
-  <polygon points="560,120 580,150 540,150" fill="#1D9E75" opacity=".22"/>
-  <polygon points="200,350 220,380 180,380" fill="#378ADD" opacity=".2"/>
-  <polygon points="480,500 500,530 460,530" fill="#EF9F27" opacity=".2"/>
-  <text x="340" y="130" text-anchor="middle" font-size="30" opacity=".18" fill="#E24B4A">★</text>
-  <text x="80" y="420" text-anchor="middle" font-size="24" opacity=".18" fill="#EF9F27">★</text>
-  <text x="600" y="400" text-anchor="middle" font-size="24" opacity=".18" fill="#1D9E75">★</text>
-  <text x="180" y="780" text-anchor="middle" font-size="28" opacity=".16" fill="#378ADD">★</text>
-  <text x="500" y="820" text-anchor="middle" font-size="22" opacity=".16" fill="#E24B4A">★</text>
+<svg class="bg-deco" viewBox="0 0 400 1600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <circle cx="20" cy="55" r="32" fill="#FAC775" opacity=".5"/>
+  <circle cx="380" cy="35" r="26" fill="#F09595" opacity=".5"/>
+  <circle cx="200" cy="18" r="20" fill="#9FE1CB" opacity=".45"/>
+  <circle cx="370" cy="160" r="38" fill="#B5D4F4" opacity=".4"/>
+  <circle cx="40" cy="230" r="26" fill="#ED93B1" opacity=".38"/>
+  <circle cx="380" cy="360" r="34" fill="#FAC775" opacity=".38"/>
+  <circle cx="15" cy="480" r="22" fill="#9FE1CB" opacity=".35"/>
+  <circle cx="380" cy="600" r="28" fill="#F09595" opacity=".35"/>
+  <circle cx="200" cy="540" r="18" fill="#B5D4F4" opacity=".3"/>
+  <circle cx="50" cy="720" r="30" fill="#FAC775" opacity=".32"/>
+  <circle cx="370" cy="860" r="24" fill="#ED93B1" opacity=".3"/>
+  <circle cx="30" cy="1000" r="26" fill="#9FE1CB" opacity=".28"/>
+  <circle cx="375" cy="1150" r="32" fill="#FAC775" opacity=".28"/>
+  <circle cx="180" cy="1300" r="20" fill="#F09595" opacity=".26"/>
+  <polygon points="70,72 86,100 54,100" fill="#E24B4A" opacity=".2"/>
+  <polygon points="330,110 346,138 314,138" fill="#1D9E75" opacity=".2"/>
+  <polygon points="120,310 136,338 104,338" fill="#378ADD" opacity=".18"/>
+  <polygon points="290,420 306,448 274,448" fill="#EF9F27" opacity=".18"/>
+  <text x="200" y="120" text-anchor="middle" font-size="28" opacity=".16" fill="#E24B4A">★</text>
+  <text x="50" y="380" text-anchor="middle" font-size="22" opacity=".16" fill="#EF9F27">★</text>
+  <text x="360" y="370" text-anchor="middle" font-size="22" opacity=".16" fill="#1D9E75">★</text>
+  <text x="100" y="700" text-anchor="middle" font-size="26" opacity=".14" fill="#378ADD">★</text>
+  <text x="310" y="740" text-anchor="middle" font-size="20" opacity=".14" fill="#E24B4A">★</text>
 </svg>
 
 <div class="content">
-  <h2 class="sr-only" style="position:absolute;left:-9999px">夏のガラポン大抽選会 ミカエル菊池店</h2>
+  <h2 style="position:absolute;left:-9999px">夏のガラポン大抽選会 ミカエル菊池店</h2>
 
   <div class="header-box" id="headerTap">
     <div class="ttl">夏のガラポン大抽選会</div>
     <div class="sub">ミカエル菊池店 ／ 7月12日（日）開店〜17:00</div>
   </div>
 
-  <div class="remain-card">
-    <div class="remain-title">景品残り本数</div>
+  <div class="card">
+    <div class="card-title">景品残り本数</div>
     <div class="remain-grid" id="remainGrid"></div>
   </div>
 
-  <div class="ticket-area">
-    <label>抽選券</label>
-    <input type="number" id="ticketInput" min="1" max="10" value="3"/>
-    <span style="font-size:14px;color:#3C2A00">枚</span>
-    <span class="ticket-badge" id="ticketBadge">残り 3 枚</span>
+  <div class="card">
+    <div class="ticket-row">
+      <label>抽選券</label>
+      <input type="number" id="ticketInput" min="1" max="10" value="3"/>
+      <span style="font-size:clamp(13px,3.5vw,15px);color:#3C2A00">枚</span>
+      <span class="ticket-badge" id="ticketBadge">残り 3 枚</span>
+    </div>
   </div>
 
-  <div class="spin-center">
+  <div class="card spin-center">
     <div class="machine-wrap">
       <svg id="machineSvg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="130" cy="158" rx="108" ry="100" fill="#0F6E56"/>
@@ -150,14 +151,14 @@ body{font-family:var(--font-sans)}
     <div class="result-area" id="resultArea"></div>
   </div>
 
-  <div class="stats-row">
-    <div class="sc"><div class="sc-lbl">抽選回数</div><div class="sc-val" id="sCnt">0</div></div>
-    <div class="sc"><div class="sc-lbl">残り券</div><div class="sc-val" id="sTkt">—</div></div>
-  </div>
-  <div class="stats-row2">
-    <div class="sc"><div class="sc-lbl">残り景品</div><div class="sc-val" id="sPrz">—</div></div>
-    <div class="sc"><div class="sc-lbl">参加賞回数</div><div class="sc-val" id="sParticipate">0</div></div>
-    <div class="sc" style="border-color:#888780"><div class="sc-lbl" style="color:#5F5E5A">合計ポイント</div><div class="sc-val" style="color:#444441;font-size:22px" id="sTotalPt">0 pt</div></div>
+  <div class="card">
+    <div class="stats-grid">
+      <div class="sc"><div class="sc-lbl">抽選回数</div><div class="sc-val" id="sCnt">0</div></div>
+      <div class="sc"><div class="sc-lbl">残り券</div><div class="sc-val" id="sTkt">—</div></div>
+      <div class="sc"><div class="sc-lbl">残り景品</div><div class="sc-val" id="sPrz">—</div></div>
+      <div class="sc"><div class="sc-lbl">参加賞回数</div><div class="sc-val" id="sParticipate">0</div></div>
+      <div class="sc sc-wide"><div class="sc-lbl">合計ポイント（参加賞）</div><div class="sc-val" id="sTotalPt">0 pt</div></div>
+    </div>
   </div>
 
   <div class="log-card">
@@ -168,13 +169,14 @@ body{font-family:var(--font-sans)}
     <div class="log-list" id="logList"><p class="empty">まだ抽選していません</p></div>
   </div>
 </div>
+</div>
 
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-box">
     <h3>設定画面 <button class="close-btn" onclick="closeSettings()">閉じる</button></h3>
     <div id="settingsBody"></div>
     <div style="margin-top:12px;text-align:right">
-      <button class="rbtn" style="font-size:13px;padding:6px 16px" onclick="applySettings()">保存して閉じる</button>
+      <button class="rbtn" style="font-size:clamp(12px,3.5vw,14px);padding:7px 18px" onclick="applySettings()">保存して閉じる</button>
     </div>
   </div>
 </div>
@@ -184,10 +186,9 @@ body{font-family:var(--font-sans)}
     <div class="confetti-wrap" id="confettiWrap"></div>
     <div class="win-title" id="winTitle"></div>
     <div class="win-prize" id="winPrizeName"></div>
-    <div id="winMsg" style="font-size:15px;margin-top:4px"></div>
+    <div id="winMsg" style="font-size:clamp(13px,3.5vw,15px);margin-top:4px;line-height:1.6"></div>
     <button class="win-close" id="winClose" onclick="closeWin()">とじる</button>
   </div>
-</div>
 </div>
 
 <script>
@@ -198,19 +199,20 @@ const PRIZES=[
   {id:'p4',name:'4等：伊藤園むぎ茶650ml',color:'#378ADD',bg:'#E6F1FB',tc:'#0C447C',cnt:840,prob:55,rank:4,pts:0},
   {id:'p0',name:'参加賞：3ポイント',color:'#888780',bg:'#F1EFE8',tc:'#2C2C2A',cnt:99999,prob:17,rank:0,pts:3},
 ];
-let counts={},probs={},ticketLeft=0,spinCnt=0,log=[],totalPts=0,participateCnt=0,tapCount=0,tapTimer=null;
+
+let counts={},probs={},ticketLeft=0,spinCnt=0,totalPts=0,participateCnt=0,tapCount=0,tapTimer=null;
+let wonMap={};
 
 function init(){
   PRIZES.forEach(p=>{counts[p.id]=p.cnt;probs[p.id]=p.prob});
+  wonMap={};
   syncTicket();renderRemain();renderStats();renderLog();
 }
 
 function renderRemain(){
-  const g=document.getElementById('remainGrid');
-  g.innerHTML='';
+  const g=document.getElementById('remainGrid');g.innerHTML='';
   PRIZES.filter(p=>p.rank>0).forEach(p=>{
-    const d=document.createElement('div');
-    d.className='remain-item';
+    const d=document.createElement('div');d.className='remain-item';
     d.innerHTML=`<span class="rdot" style="background:${p.color}"></span><span class="rname">${p.name}</span><span class="rnum" id="rn_${p.id}">${counts[p.id]}</span>`;
     g.appendChild(d);
   });
@@ -218,8 +220,7 @@ function renderRemain(){
 
 function updateRemainDisplay(){
   PRIZES.filter(p=>p.rank>0).forEach(p=>{
-    const el=document.getElementById('rn_'+p.id);
-    if(el)el.textContent=counts[p.id];
+    const el=document.getElementById('rn_'+p.id);if(el)el.textContent=counts[p.id];
   });
 }
 
@@ -240,6 +241,20 @@ function renderStats(){
   document.getElementById('spinBtn').disabled=ticketLeft<=0;
 }
 
+function renderLog(){
+  const el=document.getElementById('logList');
+  const ids=Object.keys(wonMap);
+  if(!ids.length){el.innerHTML='<p class="empty">まだ抽選していません</p>';return}
+  const order=['p1','p2','p3','p4','p0'];
+  const sorted=order.filter(id=>wonMap[id]);
+  el.innerHTML=sorted.map(id=>{
+    const e=wonMap[id];const p=PRIZES.find(x=>x.id===id);
+    const qtyStr=e.qty>1?` × ${e.qty}`:'';
+    const ptStr=id==='p0'?`<span class="li-pt">${totalPts} pt 合計</span>`:'';
+    return `<div class="li"><span class="li-dot" style="background:${p.color}"></span><span class="li-name">${p.name}</span><span class="li-qty">${e.qty}回${qtyStr!==''?'':''}</span>${ptStr}</div>`;
+  }).join('');
+}
+
 function pick(){
   const pool=PRIZES.filter(p=>p.rank===0||(counts[p.id]>0));
   const weights=pool.map(p=>Math.max(0,probs[p.id]));
@@ -256,8 +271,8 @@ const BALL_IDS=['mb1','mb2','mb3','mb4','mb5'];
 function animateMachine(prize,cb){
   let t=0;
   const iv=setInterval(()=>{
-    BALL_IDS.forEach((id,i)=>{
-      const el=document.getElementById(id),txt=document.getElementById('mbt'+(i+1));
+    BALL_IDS.forEach((bid,i)=>{
+      const el=document.getElementById(bid),txt=document.getElementById('mbt'+(i+1));
       const hx=BALL_HOME[i].cx,hy=BALL_HOME[i].cy;
       const nx=Math.max(40,Math.min(220,hx+(Math.random()-.5)*14));
       const ny=Math.max(50,Math.min(215,hy+(Math.random()-.5)*14));
@@ -267,8 +282,8 @@ function animateMachine(prize,cb){
     t++;
     if(t>22){
       clearInterval(iv);
-      BALL_IDS.forEach((id,i)=>{
-        const el=document.getElementById(id),txt=document.getElementById('mbt'+(i+1));
+      BALL_IDS.forEach((bid,i)=>{
+        const el=document.getElementById(bid),txt=document.getElementById('mbt'+(i+1));
         el.setAttribute('cx',BALL_HOME[i].cx);el.setAttribute('cy',BALL_HOME[i].cy);
         txt.setAttribute('x',BALL_HOME[i].cx);txt.setAttribute('y',BALL_HOME[i].cy+5);
       });
@@ -301,9 +316,9 @@ function spawnConfetti(wrap,count){
     const d=document.createElement('div');d.className='cf';
     d.style.left=Math.random()*100+'%';d.style.top='-10px';
     d.style.background=cols[Math.floor(Math.random()*cols.length)];
-    d.style.width=(7+Math.random()*8)+'px';d.style.height=(7+Math.random()*8)+'px';
+    d.style.width=(6+Math.random()*8)+'px';d.style.height=(6+Math.random()*8)+'px';
     d.style.borderRadius=Math.random()>.5?'50%':'3px';
-    d.style.animationDuration=(0.8+Math.random()*1.2)+'s';d.style.animationDelay=(Math.random()*0.5)+'s';
+    d.style.animationDuration=(.8+Math.random()*1.2)+'s';d.style.animationDelay=(Math.random()*.5)+'s';
     wrap.appendChild(d);
   }
   setTimeout(()=>wrap.innerHTML='',2500);
@@ -319,12 +334,12 @@ function showWin(prize){
   if(prize.rank===1){
     title.style.color=prize.tc;title.innerHTML='★ おめでとうございます！ ★';
     pname.style.color=prize.tc;pname.textContent=prize.name+' 当選！';
-    msg.style.color=prize.tc;msg.innerHTML='<strong style="font-size:18px">最高賞を引き当てました！</strong><br>素晴らしい！おめでとうございます！';
+    msg.style.color=prize.tc;msg.innerHTML='<strong style="font-size:clamp(16px,5vw,20px)">最高賞を引き当てました！</strong><br>素晴らしい！おめでとうございます！';
     spawnConfetti(wrap,50);
   }else if(prize.rank===2){
     title.style.color=prize.tc;title.innerHTML='★ おめでとうございます！ ★';
     pname.style.color=prize.tc;pname.textContent=prize.name+' 当選！';
-    msg.style.color=prize.tc;msg.innerHTML='<strong style="font-size:17px">大当たりです！</strong><br>ラッキーですね！おめでとうございます！';
+    msg.style.color=prize.tc;msg.innerHTML='<strong style="font-size:clamp(15px,4.5vw,18px)">大当たりです！</strong><br>ラッキーですね！おめでとうございます！';
     spawnConfetti(wrap,35);
   }else{
     title.style.color=prize.tc;title.textContent='おめでとうございます！';
@@ -346,7 +361,8 @@ document.getElementById('spinBtn').addEventListener('click',()=>{
     if(prize.rank>0&&counts[prize.id]>0)counts[prize.id]--;
     if(prize.rank===0){participateCnt++;totalPts+=prize.pts}
     ticketLeft--;spinCnt++;
-    log.unshift({n:spinCnt,prize});
+    if(!wonMap[prize.id])wonMap[prize.id]={qty:0,prize};
+    wonMap[prize.id].qty++;
     document.getElementById('resultArea').innerHTML=`<div class="rbadge" style="background:${prize.bg};color:${prize.tc};border:2px solid ${prize.color}88">${prize.name}</div>`;
     document.getElementById('ticketBadge').textContent='残り '+ticketLeft+' 枚';
     document.getElementById('sTkt').textContent=ticketLeft;
@@ -359,15 +375,9 @@ document.getElementById('spinBtn').addEventListener('click',()=>{
 document.getElementById('ticketInput').addEventListener('input',syncTicket);
 document.getElementById('ticketInput').addEventListener('change',syncTicket);
 
-function renderLog(){
-  const el=document.getElementById('logList');
-  if(!log.length){el.innerHTML='<p class="empty">まだ抽選していません</p>';return}
-  el.innerHTML=log.map(l=>`<div class="li"><span class="li-num">#${l.n}</span><span class="rdot" style="background:${l.prize.color};width:10px;height:10px;flex-shrink:0"></span><span>${l.prize.name}</span>${l.prize.rank===0?`<span class="li-pt">+${l.prize.pts} pt</span>`:''}</div>`).join('');
-}
-
 function doReset(){
   PRIZES.forEach(p=>{counts[p.id]=p.cnt;probs[p.id]=p.prob});
-  log=[];spinCnt=0;totalPts=0;participateCnt=0;tapCount=0;
+  wonMap={};spinCnt=0;totalPts=0;participateCnt=0;tapCount=0;
   const v=parseInt(document.getElementById('ticketInput').value)||1;
   ticketLeft=v;
   document.getElementById('resultArea').innerHTML='';
@@ -383,8 +393,8 @@ document.getElementById('headerTap').addEventListener('click',()=>{
 function openSettings(){
   const body=document.getElementById('settingsBody');
   const total=PRIZES.reduce((s,p)=>s+probs[p.id],0);
-  body.innerHTML='<div style="font-size:11px;color:#854F0B;margin-bottom:10px">スライダーで当選確率の重みを調整。本数は直接入力で変更できます。</div>'+
-  PRIZES.map(p=>`<div class="prize-row-s"><span class="sdot" style="background:${p.color}"></span><span class="sname">${p.name}</span><div class="s-inputs">${p.rank>0?`<span class="slbl">本数</span><input type="number" id="sc_${p.id}" min="0" max="9999" value="${counts[p.id]}" style="width:60px"/>`:'<span style="font-size:11px;color:#888">無制限</span>'}<span class="slbl">確率</span><input type="range" min="0" max="100" step="1" value="${probs[p.id]}" id="sp_${p.id}" oninput="syncProb()"/><span class="prob-pct" id="spv_${p.id}">${(probs[p.id]/total*100).toFixed(1)}%</span></div></div>`).join('');
+  body.innerHTML='<div style="font-size:clamp(10px,2.8vw,12px);color:#854F0B;margin-bottom:10px">スライダーで当選確率の重みを調整。本数は直接入力で変更できます。</div>'+
+  PRIZES.map(p=>`<div class="prize-row-s"><div class="prize-row-s-top"><span class="sdot" style="background:${p.color}"></span><span class="sname">${p.name}</span></div><div class="s-inputs">${p.rank>0?`<span class="slbl">本数</span><input type="number" id="sc_${p.id}" min="0" max="9999" value="${counts[p.id]}"/>`:'<span style="font-size:11px;color:#888">無制限</span>'}<span class="slbl">確率</span><input type="range" min="0" max="100" step="1" value="${probs[p.id]}" id="sp_${p.id}" oninput="syncProb()"/><span class="prob-pct" id="spv_${p.id}">${(probs[p.id]/total*100).toFixed(1)}%</span></div></div>`).join('');
   document.getElementById('settingsOverlay').classList.add('open');
 }
 
