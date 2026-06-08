@@ -1,0 +1,600 @@
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<style>
+:root{
+  --red:#E24B4A;--green:#1D9E75;--orange:#EF9F27;--blue:#378ADD;--gray:#888780;
+  --bg:#FFF8F0;--card:#fff;--accent1:#FF6B6B;--accent2:#FFA500;
+  --radius:18px;--radius-sm:12px;--shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;padding-bottom:32px}
+
+/* ── 浮遊デコ ── */
+.deco-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.deco-circle{position:absolute;border-radius:50%;opacity:0.12}
+
+/* ── レイアウト ── */
+.page{position:relative;z-index:1;width:100%;max-width:430px;margin:0 auto;padding:0 14px 20px}
+
+/* ── バナー ── */
+.banner{border-radius:var(--radius);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);cursor:pointer;user-select:none;position:relative}
+.banner-bg{background:linear-gradient(135deg,#FF6B6B 0%,#FF8E53 45%,#FFD166 100%);padding:20px 18px 16px;position:relative}
+.banner-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='3' fill='white' opacity='0.18'/%3E%3C/svg%3E");pointer-events:none}
+.banner-emoji{font-size:32px;margin-bottom:6px;display:block;animation:sway 3s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.banner-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.04em;line-height:1.2;position:relative}
+.banner-sub{font-size:14px;color:rgba(255,255,255,0.88);margin-top:4px;position:relative}
+.banner-img{width:100%;display:none;max-height:130px;object-fit:cover}
+.banner-tap{position:absolute;top:8px;right:12px;font-size:11px;color:rgba(255,255,255,0.55);pointer-events:none}
+
+/* ── セクションヘッダ ── */
+.sec-head{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.sec-head-icon{font-size:18px}
+.sec-head-label{font-size:15px;font-weight:700;color:#3C2A00}
+
+/* ── カード ── */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card:nth-child(2){animation-delay:.05s}
+.card:nth-child(3){animation-delay:.1s}
+.card:nth-child(4){animation-delay:.15s}
+.card:nth-child(5){animation-delay:.2s}
+
+/* ── 残り本数 ── */
+.remain-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.remain-item{display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#fffbf0,#fff5e0)}
+.rdot{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.18)}
+.rname{font-size:13px;color:#5A3E00;flex:1;line-height:1.3;font-weight:500}
+.rnum{font-size:20px;font-weight:700;color:var(--red);line-height:1}
+
+/* ── 抽選券 ── */
+.ticket-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ticket-label{font-size:16px;font-weight:700;color:#3C2A00}
+.ticket-input{width:80px;font-size:18px;font-weight:700;padding:10px 8px;border:2px solid #FAC775;border-radius:var(--radius-sm);background:#fffbf0;color:#3C2A00;text-align:center;-webkit-appearance:none;appearance:none;min-height:44px}
+.ticket-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(239,159,39,0.18)}
+.ticket-badge{font-size:14px;font-weight:700;color:#854F0B;background:linear-gradient(135deg,#FAEEDA,#FFE4A0);border-radius:30px;padding:6px 16px;min-height:36px;display:flex;align-items:center}
+
+/* ── マシンエリア ── */
+.machine-area{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0 4px}
+.machine-wrap{width:min(75vw,280px);height:min(75vw,280px);position:relative}
+.machine-wrap svg{width:100%;height:100%}
+.exit-track{width:min(75vw,280px);height:72px;position:relative;overflow:visible}
+.html-ball{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:17px;opacity:0;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,0.22);left:50%;transform:translateX(-50%) translateY(0);transition:none}
+
+/* ── スピンボタン ── */
+.spin-btn{width:100%;max-width:280px;min-height:56px;font-size:19px;font-weight:700;border:none;border-radius:40px;background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFD166);color:#fff;cursor:pointer;letter-spacing:0.06em;box-shadow:0 6px 20px rgba(226,75,74,0.35);transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden}
+.spin-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);border-radius:40px}
+.spin-btn:not(:disabled):active{transform:scale(.95);box-shadow:0 2px 10px rgba(226,75,74,0.25)}
+.spin-btn:disabled{opacity:.4;cursor:default;box-shadow:none}
+.result-wrap{min-height:48px;display:flex;align-items:center;justify-content:center}
+.result-pill{font-size:17px;font-weight:700;padding:10px 24px;border-radius:40px;animation:pop .4s cubic-bezier(.2,1.4,.6,1) both;border:2.5px solid transparent}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── スタッツ ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:linear-gradient(135deg,#fffbf0,#fff5e0);border-radius:var(--radius-sm);padding:12px 10px;text-align:center}
+.stat-label{font-size:13px;color:#854F0B;font-weight:600;margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:700;color:#3C2A00;line-height:1}
+.stat-wide{grid-column:1/-1;background:linear-gradient(135deg,#e8f5ff,#d4ecff)}
+.stat-wide .stat-label{color:#0C447C}
+.stat-wide .stat-value{color:#185FA5;font-size:26px}
+
+/* ── ログ ── */
+.log-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.log-title{font-size:16px;font-weight:700;color:#3C2A00}
+.reset-btn{font-size:14px;font-weight:600;color:#854F0B;background:linear-gradient(135deg,#FAEEDA,#FFE4A0);border:none;border-radius:10px;padding:8px 16px;min-height:36px;cursor:pointer;transition:transform .1s}
+.reset-btn:active{transform:scale(.96)}
+.log-empty{font-size:15px;color:#BA7517;text-align:center;padding:20px 0}
+.log-list{display:flex;flex-direction:column;gap:8px}
+.log-item{display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#fffbf0,#fff8ee);border-left:4px solid var(--orange)}
+.log-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.18)}
+.log-name{font-size:15px;font-weight:600;color:#3C2A00;flex:1}
+.log-qty{font-size:17px;font-weight:700;color:var(--red)}
+.log-pt{font-size:13px;font-weight:600;color:#185FA5;white-space:nowrap}
+
+/* ── 設定オーバーレイ ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;padding:0}
+.overlay.open{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:90vh;overflow-y:auto;padding:20px 18px 36px;animation:slideUp .3s cubic-bezier(.25,1,.5,1) both}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 18px}
+.sheet-title{font-size:18px;font-weight:700;color:#3C2A00;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.close-btn{font-size:14px;font-weight:600;color:#854F0B;background:#FAEEDA;border:none;border-radius:10px;padding:8px 16px;min-height:36px;cursor:pointer}
+
+.ps-row{padding:12px 0;border-bottom:1px dashed #FAC775}
+.ps-row:last-child{border-bottom:none}
+.ps-name{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ps-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.ps-name-text{font-size:15px;font-weight:600;color:#3C2A00}
+.ps-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ps-controls input[type=number]{width:72px;font-size:16px;padding:8px 8px;border:1.5px solid #FAC775;border-radius:10px;background:#FFF9E6;color:#3C2A00;text-align:center;min-height:40px;-webkit-appearance:none;appearance:none}
+.ps-controls input[type=range]{flex:1;min-width:100px;height:6px;accent-color:var(--red)}
+.ps-pct{font-size:14px;font-weight:700;color:var(--red);min-width:44px;text-align:right}
+.ps-lbl{font-size:13px;color:#854F0B;font-weight:600}
+
+.banner-set{margin-top:16px;border-top:1px dashed #FAC775;padding-top:16px}
+.bs-field{margin-bottom:12px}
+.bs-field label{font-size:14px;font-weight:600;color:#854F0B;display:block;margin-bottom:5px}
+.bs-field input[type=text]{width:100%;font-size:16px;padding:11px 13px;border:1.5px solid #FAC775;border-radius:12px;background:#FFF9E6;color:#3C2A00;min-height:44px;-webkit-appearance:none}
+.bs-field input[type=text]:focus{outline:none;border-color:var(--orange)}
+.bs-field input[type=file]{font-size:15px;color:#854F0B;padding:8px 0}
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.color-swatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.color-swatch.active{border-color:#3C2A00;transform:scale(1.2);box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+.save-btn{width:100%;min-height:48px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:#fff;border:none;border-radius:14px;margin-top:18px;cursor:pointer;box-shadow:0 4px 16px rgba(226,75,74,0.28)}
+.save-btn:active{opacity:.9;transform:scale(.98)}
+
+/* ── 当選オーバーレイ ── */
+.win-overlay{display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;background:rgba(0,0,0,0.65);padding:16px}
+.win-overlay.open{display:flex;animation:fadeIn .2s ease}
+.win-box{border-radius:24px;padding:28px 22px 22px;text-align:center;animation:popbig .5s cubic-bezier(.2,1.4,.6,1) both;width:min(92vw,360px);position:relative;overflow:hidden}
+@keyframes popbig{from{transform:scale(.2) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.win-emoji{font-size:48px;display:block;margin-bottom:6px;animation:bounce 0.6s cubic-bezier(.2,1.4,.5,1) .3s both}
+@keyframes bounce{from{transform:scale(0) translateY(-20px)}to{transform:scale(1) translateY(0)}}
+.win-title{font-size:clamp(20px,7vw,30px);font-weight:700;margin-bottom:6px;line-height:1.2}
+.win-prize{font-size:clamp(16px,5vw,20px);font-weight:700;margin-bottom:8px}
+.win-msg{font-size:clamp(14px,4vw,15px);line-height:1.7;margin-bottom:4px}
+.win-close{min-height:48px;width:100%;max-width:220px;font-size:16px;font-weight:700;border:none;border-radius:30px;cursor:pointer;margin-top:14px;-webkit-tap-highlight-color:transparent}
+.cf-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:24px}
+.cf{position:absolute;border-radius:2px;animation:cffall linear forwards}
+@keyframes cffall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(280px) rotate(720deg);opacity:0}}
+</style>
+
+<!-- 背景デコ -->
+<div class="deco-bg" id="decoBg"></div>
+
+<div class="page">
+
+  <!-- バナー -->
+  <div class="banner" id="bannerArea" style="margin-top:14px">
+    <img id="bannerImg" class="banner-img" alt="バナー"/>
+    <div class="banner-bg" id="bannerBg">
+      <span class="banner-emoji" id="bannerEmoji">🎉</span>
+      <div class="banner-title" id="bannerTtl">夏のガラポン大抽選会</div>
+      <div class="banner-sub" id="bannerSub">ミカエル菊池店 ／ 7月12日（日）開店〜17:00</div>
+      <span class="banner-tap">タイトルを10回タップで設定</span>
+    </div>
+  </div>
+
+  <!-- 景品残り -->
+  <div class="card">
+    <div class="sec-head">
+      <span class="sec-head-icon">🎁</span>
+      <span class="sec-head-label">景品残り本数</span>
+    </div>
+    <div class="remain-grid" id="remainGrid"></div>
+  </div>
+
+  <!-- 抽選券 -->
+  <div class="card">
+    <div class="sec-head">
+      <span class="sec-head-icon">🎫</span>
+      <span class="sec-head-label">抽選券</span>
+    </div>
+    <div class="ticket-row">
+      <input type="number" class="ticket-input" id="ticketInput" min="1" max="10" value="3" inputmode="numeric"/>
+      <span style="font-size:16px;font-weight:700;color:#3C2A00">枚</span>
+      <span class="ticket-badge" id="ticketBadge">残り 3 枚</span>
+    </div>
+  </div>
+
+  <!-- マシン -->
+  <div class="card machine-area">
+    <div class="machine-wrap" id="machineWrap">
+      <svg id="machineSvg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg" cx="35%" cy="28%" r="65%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#000" stop-opacity="0.1"/>
+          </radialGradient>
+          <radialGradient id="rgBody" cx="40%" cy="28%" r="70%">
+            <stop offset="0%" stop-color="#32d49a"/>
+            <stop offset="100%" stop-color="#0a5e44"/>
+          </radialGradient>
+          <radialGradient id="rgGlass" cx="36%" cy="26%" r="70%">
+            <stop offset="0%" stop-color="#d4f5eb" stop-opacity="0.75"/>
+            <stop offset="80%" stop-color="#8fe0c6" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#3aaa82" stop-opacity="0.15"/>
+          </radialGradient>
+        </defs>
+        <!-- 台座 -->
+        <ellipse cx="140" cy="272" rx="72" ry="7" fill="#085041" opacity="0.3"/>
+        <rect x="106" y="244" width="68" height="26" rx="8" fill="#1a7a5c"/>
+        <rect x="114" y="250" width="52" height="14" rx="5" fill="#0f5e42"/>
+        <rect x="104" y="236" width="72" height="14" rx="6" fill="#2dc48e"/>
+        <!-- 首部分 -->
+        <rect x="122" y="54" width="36" height="26" rx="6" fill="#1a7a5c"/>
+        <ellipse cx="140" cy="56" rx="26" ry="10" fill="#2dc48e"/>
+        <rect x="130" y="78" width="20" height="14" rx="4" fill="#0f5e42"/>
+        <!-- 球体本体 -->
+        <ellipse cx="140" cy="166" rx="110" ry="102" fill="url(#rgBody)"/>
+        <ellipse cx="140" cy="162" rx="100" ry="93" fill="url(#rgGlass)"/>
+        <ellipse cx="140" cy="159" rx="90" ry="84" fill="rgba(210,250,232,0.16)"/>
+        <!-- 光沢 -->
+        <ellipse cx="116" cy="108" rx="14" ry="9" fill="rgba(255,255,255,0.14)" transform="rotate(-28,116,108)"/>
+        <!-- 球 -->
+        <circle id="mb1" cx="108" cy="152" r="25" fill="#E24B4A"/>
+        <circle cx="108" cy="152" id="ms1" r="25" fill="url(#rg)" opacity="0.65"/>
+        <text id="mt1" x="108" y="158" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">1等</text>
+        <circle id="mb2" cx="156" cy="132" r="21" fill="#1D9E75"/>
+        <circle cx="156" cy="132" id="ms2" r="21" fill="url(#rg)" opacity="0.65"/>
+        <text id="mt2" x="156" y="138" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">2等</text>
+        <circle id="mb3" cx="192" cy="158" r="23" fill="#EF9F27"/>
+        <circle cx="192" cy="158" id="ms3" r="23" fill="url(#rg)" opacity="0.65"/>
+        <text id="mt3" x="192" y="164" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">3等</text>
+        <circle id="mb4" cx="120" cy="190" r="20" fill="#378ADD"/>
+        <circle cx="120" cy="190" id="ms4" r="20" fill="url(#rg)" opacity="0.65"/>
+        <text id="mt4" x="120" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">4等</text>
+        <circle id="mb5" cx="162" cy="192" r="18" fill="#888780"/>
+        <circle cx="162" cy="192" id="ms5" r="18" fill="url(#rg)" opacity="0.65"/>
+        <text id="mt5" x="162" y="197" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">参加</text>
+        <!-- 出口ボール -->
+        <circle id="svgBall" cx="140" cy="242" r="0" fill="#E24B4A" opacity="0"/>
+        <circle id="svgBallS" cx="140" cy="242" r="0" fill="url(#rg)" opacity="0"/>
+      </svg>
+    </div>
+
+    <div class="exit-track" id="exitTrack">
+      <div id="htmlBall" class="html-ball" style="width:52px;height:52px;top:4px"></div>
+    </div>
+
+    <button class="spin-btn" id="spinBtn">🎰 ガラポンを回す！</button>
+    <div class="result-wrap" id="resultWrap"></div>
+  </div>
+
+  <!-- スタッツ -->
+  <div class="card">
+    <div class="sec-head">
+      <span class="sec-head-icon">📊</span>
+      <span class="sec-head-label">結果サマリー</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-label">🎲 抽選回数</div><div class="stat-value" id="sCnt">0</div></div>
+      <div class="stat"><div class="stat-label">🎫 残り券</div><div class="stat-value" id="sTkt">3</div></div>
+      <div class="stat"><div class="stat-label">🎁 残り景品</div><div class="stat-value" id="sPrz">—</div></div>
+      <div class="stat"><div class="stat-label">⭐ 参加賞回数</div><div class="stat-value" id="sParticipate">0</div></div>
+      <div class="stat stat-wide"><div class="stat-label">💎 合計ポイント（参加賞）</div><div class="stat-value" id="sTotalPt">0 pt</div></div>
+    </div>
+  </div>
+
+  <!-- ログ -->
+  <div class="card">
+    <div class="log-header">
+      <div class="sec-head" style="margin-bottom:0">
+        <span class="sec-head-icon">📋</span>
+        <span class="sec-head-label">当選結果一覧</span>
+      </div>
+      <button class="reset-btn" onclick="doReset()">🔄 リセット</button>
+    </div>
+    <div id="logList"><p class="log-empty">まだ抽選していません 🎈</p></div>
+  </div>
+
+</div>
+
+<!-- 設定シート -->
+<div class="overlay" id="settingsOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">
+      <span>⚙️ 設定</span>
+      <button class="close-btn" onclick="closeSettings()">閉じる</button>
+    </div>
+    <div id="settingsBody"></div>
+    <div class="banner-set">
+      <div class="bs-field">
+        <label>🏷️ バナータイトル</label>
+        <input type="text" id="bsTtl" placeholder="夏のガラポン大抽選会" inputmode="text"/>
+      </div>
+      <div class="bs-field">
+        <label>📅 バナーサブテキスト</label>
+        <input type="text" id="bsSub" placeholder="ミカエル菊池店 ／ 7月12日" inputmode="text"/>
+      </div>
+      <div class="bs-field">
+        <label>😀 バナー絵文字</label>
+        <input type="text" id="bsEmoji" placeholder="🎉" inputmode="text" style="width:80px"/>
+      </div>
+      <div class="bs-field">
+        <label>🖼️ バナー画像（任意）</label>
+        <input type="file" id="bsFile" accept="image/*" onchange="handleBannerFile(this)" style="font-size:15px;color:#854F0B;padding:8px 0"/>
+      </div>
+      <div class="bs-field">
+        <label>🎨 バナーカラー</label>
+        <div class="color-row" id="colorRow"></div>
+      </div>
+    </div>
+    <button class="save-btn" onclick="applySettings()">✅ 保存して閉じる</button>
+  </div>
+</div>
+
+<!-- 当選オーバーレイ -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-box" id="winBox">
+    <div class="cf-wrap" id="cfWrap"></div>
+    <span class="win-emoji" id="winEmoji"></span>
+    <div class="win-title" id="winTitle"></div>
+    <div class="win-prize" id="winPrizeName"></div>
+    <div class="win-msg" id="winMsg"></div>
+    <button class="win-close" id="winClose" onclick="closeWin()">とじる 🙌</button>
+  </div>
+</div>
+
+<script>
+const PRIZES=[
+  {id:'p1',name:'1等：商品券3,000円',color:'#E24B4A',bg:'#FCEBEB',tc:'#A32D2D',cnt:10,prob:1,rank:1,pts:0,emoji:'🏆'},
+  {id:'p2',name:'2等：お米 2kg',color:'#1D9E75',bg:'#E1F5EE',tc:'#085041',cnt:20,prob:2,rank:2,pts:0,emoji:'🌟'},
+  {id:'p3',name:'3等：キッチンタオル4ロール',color:'#EF9F27',bg:'#FAEEDA',tc:'#633806',cnt:300,prob:25,rank:3,pts:0,emoji:'🎊'},
+  {id:'p4',name:'4等：伊藤園むぎ茶650ml',color:'#378ADD',bg:'#E6F1FB',tc:'#0C447C',cnt:840,prob:55,rank:4,pts:0,emoji:'🎁'},
+  {id:'p0',name:'参加賞：3ポイント',color:'#888780',bg:'#F1EFE8',tc:'#2C2C2A',cnt:99999,prob:17,rank:0,pts:3,emoji:'⭐'},
+];
+const BANNER_COLORS=['#FF6B35','#E24B4A','#1D9E75','#378ADD','#EF9F27','#8B5CF6','#EC4899','#0F766E'];
+const BALL_HOME=[{cx:108,cy:152},{cx:156,cy:132},{cx:192,cy:158},{cx:120,cy:190},{cx:162,cy:192}];
+
+let counts={},probs={},ticketLeft=0,spinCnt=0,totalPts=0,partCnt=0,tapCount=0,tapTimer=null,wonMap={};
+let bannerColor=BANNER_COLORS[0],bannerImgData=null;
+
+function init(){
+  PRIZES.forEach(p=>{counts[p.id]=p.cnt;probs[p.id]=p.prob});
+  wonMap={};buildDeco();syncTicket();renderRemain();renderStats();renderLog();
+}
+
+function buildDeco(){
+  const el=document.getElementById('decoBg');el.innerHTML='';
+  const colors=['#FAC775','#F09595','#9FE1CB','#B5D4F4','#ED93B1','#FFF0A0','#C8F0FF'];
+  for(let i=0;i<14;i++){
+    const d=document.createElement('div');d.className='deco-circle';
+    const sz=30+Math.random()*80;
+    d.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${colors[~~(Math.random()*colors.length)]}`;
+    el.appendChild(d);
+  }
+}
+
+function renderRemain(){
+  const g=document.getElementById('remainGrid');g.innerHTML='';
+  PRIZES.filter(p=>p.rank>0).forEach(p=>{
+    const d=document.createElement('div');d.className='remain-item';
+    d.innerHTML=`<span class="rdot" style="background:${p.color}"></span><div class="rname">${p.name}</div><div class="rnum" id="rn_${p.id}">${counts[p.id]}</div>`;
+    g.appendChild(d);
+  });
+}
+function updateRemain(){PRIZES.filter(p=>p.rank>0).forEach(p=>{const e=document.getElementById('rn_'+p.id);if(e)e.textContent=counts[p.id]})}
+
+function syncTicket(){
+  const v=parseInt(document.getElementById('ticketInput').value)||1;
+  ticketLeft=v;
+  document.getElementById('ticketBadge').textContent='残り '+ticketLeft+' 枚';
+  document.getElementById('sTkt').textContent=ticketLeft;
+  document.getElementById('spinBtn').disabled=ticketLeft<=0;
+}
+
+function renderStats(){
+  const tp=PRIZES.filter(p=>p.rank>0).reduce((s,p)=>s+Math.max(0,counts[p.id]),0);
+  document.getElementById('sPrz').textContent=tp;
+  document.getElementById('sCnt').textContent=spinCnt;
+  document.getElementById('sParticipate').textContent=partCnt;
+  document.getElementById('sTotalPt').textContent=totalPts+' pt';
+  document.getElementById('spinBtn').disabled=ticketLeft<=0;
+}
+
+function renderLog(){
+  const el=document.getElementById('logList');
+  const order=['p1','p2','p3','p4','p0'];
+  const sorted=order.filter(id=>wonMap[id]);
+  if(!sorted.length){el.innerHTML='<p class="log-empty">まだ抽選していません 🎈</p>';return}
+  const list=document.createElement('div');list.className='log-list';
+  sorted.forEach(id=>{
+    const e=wonMap[id],p=PRIZES.find(x=>x.id===id);
+    const row=document.createElement('div');row.className='log-item';
+    row.style.borderLeftColor=p.color;
+    row.innerHTML=`<span class="log-dot" style="background:${p.color}"></span><span class="log-name">${p.emoji} ${p.name}</span><span class="log-qty">${e.qty}回</span>${id==='p0'?`<span class="log-pt">💎 ${totalPts}pt</span>`:''}`;
+    list.appendChild(row);
+  });
+  el.innerHTML='';el.appendChild(list);
+}
+
+function pick(){
+  const pool=PRIZES.filter(p=>p.rank===0||counts[p.id]>0);
+  const weights=pool.map(p=>Math.max(0,probs[p.id]));
+  const total=weights.reduce((a,b)=>a+b,0);
+  if(!total)return pool[pool.length-1];
+  let r=Math.random()*total;
+  for(let i=0;i<pool.length;i++){r-=weights[i];if(r<=0)return pool[i]}
+  return pool[pool.length-1];
+}
+
+function animateMachine(prize,cb){
+  const ids=['mb1','mb2','mb3','mb4','mb5'];
+  const sids=['ms1','ms2','ms3','ms4','ms5'];
+  const tids=['mt1','mt2','mt3','mt4','mt5'];
+  let t=0;
+  const iv=setInterval(()=>{
+    ids.forEach((bid,i)=>{
+      const b=document.getElementById(bid),s=document.getElementById(sids[i]),tx=document.getElementById(tids[i]);
+      const hx=BALL_HOME[i].cx,hy=BALL_HOME[i].cy;
+      const nx=Math.max(45,Math.min(235,hx+(Math.random()-.5)*20));
+      const ny=Math.max(50,Math.min(240,hy+(Math.random()-.5)*20));
+      [b,s].forEach(el=>{el.setAttribute('cx',nx);el.setAttribute('cy',ny)});
+      tx.setAttribute('x',nx);tx.setAttribute('y',ny+5);
+    });
+    t++;
+    if(t>22){
+      clearInterval(iv);
+      ids.forEach((bid,i)=>{
+        const b=document.getElementById(bid),s=document.getElementById(sids[i]),tx=document.getElementById(tids[i]);
+        [b,s].forEach(el=>{el.setAttribute('cx',BALL_HOME[i].cx);el.setAttribute('cy',BALL_HOME[i].cy)});
+        tx.setAttribute('x',BALL_HOME[i].cx);tx.setAttribute('y',BALL_HOME[i].cy+5);
+      });
+      shootSvgBall(prize,cb);
+    }
+  },46);
+}
+
+function shootSvgBall(prize,cb){
+  const b=document.getElementById('svgBall'),s=document.getElementById('svgBallS');
+  b.setAttribute('fill',prize.color);b.setAttribute('r','20');b.setAttribute('opacity','1');
+  s.setAttribute('r','20');s.setAttribute('opacity','0.65');
+  let cy=242,t=0;
+  const iv=setInterval(()=>{cy+=8;t++;
+    [b,s].forEach(el=>el.setAttribute('cy',cy));
+    if(t>8){clearInterval(iv);
+      [b,s].forEach(el=>{el.setAttribute('r','0');el.setAttribute('opacity','0');el.setAttribute('cy','242')});
+      launchHtmlBall(prize,cb);
+    }
+  },36);
+}
+
+function launchHtmlBall(prize,cb){
+  const hb=document.getElementById('htmlBall');
+  hb.textContent=prize.emoji||prize.rank+'等';
+  hb.style.background=prize.color;
+  hb.style.boxShadow=`0 6px 22px ${prize.color}66`;
+  hb.style.transition='none';
+  hb.style.opacity='1';hb.style.transform='translateX(-50%) translateY(0) scale(0.4)';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    hb.style.transition='transform 0.55s cubic-bezier(.2,1.4,.5,1), opacity 0.35s ease 0.7s';
+    hb.style.transform='translateX(-50%) translateY(10px) scale(1)';
+    setTimeout(()=>{
+      hb.style.opacity='0';
+      setTimeout(()=>{hb.style.transform='translateX(-50%) translateY(0) scale(0.4)';cb()},380);
+    },720);
+  }));
+}
+
+function playSound(rank){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    if(rank<=2){[[523,.0],[659,.14],[784,.28],[1047,.43],[1318,.58]].forEach(([f,d])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime+d);g.gain.linearRampToValueAtTime(.28,ctx.currentTime+d+.05);g.gain.linearRampToValueAtTime(0,ctx.currentTime+d+.22);o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+.26)});}
+    else{[[523,.0],[659,.13],[784,.27]].forEach(([f,d])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime+d);g.gain.linearRampToValueAtTime(.22,ctx.currentTime+d+.05);g.gain.linearRampToValueAtTime(0,ctx.currentTime+d+.18);o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+.2)});}
+  }catch(e){}
+}
+
+function spawnConfetti(wrap,n){
+  const cols=['#E24B4A','#EF9F27','#1D9E75','#378ADD','#ED93B1','#FAC775','#9FE1CB','#fff'];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');d.className='cf';
+    const sz=6+Math.random()*10;
+    d.style.cssText=`left:${Math.random()*100}%;top:-12px;width:${sz}px;height:${sz}px;background:${cols[~~(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${.9+Math.random()*1.3}s;animation-delay:${Math.random()*.55}s`;
+    wrap.appendChild(d);
+  }
+  setTimeout(()=>wrap.innerHTML='',3000);
+}
+
+function showWin(prize){
+  const ov=document.getElementById('winOverlay'),box=document.getElementById('winBox');
+  const emoji=document.getElementById('winEmoji'),title=document.getElementById('winTitle');
+  const pname=document.getElementById('winPrizeName'),msg=document.getElementById('winMsg');
+  const btn=document.getElementById('winClose'),wrap=document.getElementById('cfWrap');
+  wrap.innerHTML='';
+  box.style.background=prize.bg;box.style.border=`3px solid ${prize.color}`;
+  btn.style.background=prize.color;btn.style.color='#fff';
+  if(prize.rank===1){
+    emoji.textContent='🏆';title.style.color=prize.tc;title.innerHTML='★ おめでとうございます！ ★';
+    pname.style.color=prize.tc;pname.textContent=prize.name+' 当選！';
+    msg.style.color=prize.tc;msg.innerHTML='<strong>最高賞を引き当てました！</strong><br>とっても素晴らしい！おめでとうございます！🎉';
+    spawnConfetti(wrap,60);
+  }else if(prize.rank===2){
+    emoji.textContent='🌟';title.style.color=prize.tc;title.innerHTML='★ おめでとうございます！ ★';
+    pname.style.color=prize.tc;pname.textContent=prize.name+' 当選！';
+    msg.style.color=prize.tc;msg.innerHTML='<strong>大当たりです！</strong><br>ラッキー！おめでとうございます！✨';
+    spawnConfetti(wrap,40);
+  }else{
+    emoji.textContent=prize.emoji;title.style.color=prize.tc;title.textContent='おめでとうございます！';
+    pname.style.color=prize.tc;pname.textContent=prize.name+' 当選！';
+    msg.style.color=prize.tc;msg.textContent='またぜひご参加ください！😊';
+    spawnConfetti(wrap,18);
+  }
+  ov.classList.add('open');
+}
+function closeWin(){document.getElementById('winOverlay').classList.remove('open')}
+
+document.getElementById('spinBtn').addEventListener('click',()=>{
+  if(ticketLeft<=0)return;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('resultWrap').innerHTML='';
+  const prize=pick();
+  animateMachine(prize,()=>{
+    if(prize.rank>0&&counts[prize.id]>0)counts[prize.id]--;
+    if(prize.rank===0){partCnt++;totalPts+=prize.pts}
+    ticketLeft--;spinCnt++;
+    if(!wonMap[prize.id])wonMap[prize.id]={qty:0};
+    wonMap[prize.id].qty++;
+    document.getElementById('resultWrap').innerHTML=`<div class="result-pill" style="background:${prize.bg};color:${prize.tc};border-color:${prize.color}">${prize.emoji} ${prize.name}</div>`;
+    document.getElementById('ticketBadge').textContent='残り '+ticketLeft+' 枚';
+    document.getElementById('sTkt').textContent=ticketLeft;
+    updateRemain();renderStats();renderLog();
+    if(prize.rank>=1&&prize.rank<=4){playSound(prize.rank);setTimeout(()=>showWin(prize),380)}
+    setTimeout(()=>{document.getElementById('spinBtn').disabled=ticketLeft<=0},520);
+  });
+});
+
+document.getElementById('ticketInput').addEventListener('input',syncTicket);
+document.getElementById('ticketInput').addEventListener('change',syncTicket);
+
+let tapTimer2=null;
+document.getElementById('bannerArea').addEventListener('click',()=>{
+  tapCount++;clearTimeout(tapTimer2);
+  if(tapCount>=10){tapCount=0;openSettings();return}
+  tapTimer2=setTimeout(()=>{tapCount=0},3000);
+});
+
+function openSettings(){
+  const body=document.getElementById('settingsBody');
+  const total=PRIZES.reduce((s,p)=>s+probs[p.id],0);
+  body.innerHTML='<p style="font-size:14px;color:#854F0B;margin-bottom:12px">スライダー（1%刻み）で当選確率を調整できます</p>'+
+  PRIZES.map(p=>`<div class="ps-row"><div class="ps-name"><span class="ps-dot" style="background:${p.color}"></span><span class="ps-name-text">${p.emoji} ${p.name}</span></div><div class="ps-controls">${p.rank>0?`<span class="ps-lbl">本数</span><input type="number" id="sc_${p.id}" min="0" max="9999" value="${counts[p.id]}" inputmode="numeric"/>`:'<span style="font-size:13px;color:#888">無制限</span>'}<span class="ps-lbl">確率</span><input type="range" min="0" max="100" step="1" value="${probs[p.id]}" id="sp_${p.id}" oninput="syncProb()"/><span class="ps-pct" id="spv_${p.id}">${(total>0?(probs[p.id]/total*100):0).toFixed(1)}%</span></div></div>`).join('');
+  document.getElementById('bsTtl').value=document.getElementById('bannerTtl').textContent;
+  document.getElementById('bsSub').value=document.getElementById('bannerSub').textContent;
+  document.getElementById('bsEmoji').value=document.getElementById('bannerEmoji').textContent;
+  const cr=document.getElementById('colorRow');cr.innerHTML='';
+  BANNER_COLORS.forEach(c=>{
+    const s=document.createElement('span');s.className='color-swatch'+(c===bannerColor?' active':'');
+    s.style.background=c;
+    s.onclick=()=>{bannerColor=c;document.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('active'));s.classList.add('active')};
+    cr.appendChild(s);
+  });
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+
+function syncProb(){
+  const total=PRIZES.reduce((s,p)=>{const e=document.getElementById('sp_'+p.id);return s+(e?+e.value:probs[p.id])},0);
+  PRIZES.forEach(p=>{const e=document.getElementById('sp_'+p.id),pv=document.getElementById('spv_'+p.id);if(e&&pv)pv.textContent=total>0?((+e.value/total)*100).toFixed(1)+'%':'0%'});
+}
+
+function handleBannerFile(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();r.onload=e=>{bannerImgData=e.target.result};r.readAsDataURL(f);
+}
+
+function applySettings(){
+  PRIZES.forEach(p=>{
+    const pe=document.getElementById('sp_'+p.id);if(pe)probs[p.id]=+pe.value;
+    const ce=document.getElementById('sc_'+p.id);if(ce)counts[p.id]=Math.max(0,parseInt(ce.value)||0);
+  });
+  const ttl=document.getElementById('bsTtl').value.trim();
+  const sub=document.getElementById('bsSub').value.trim();
+  const em=document.getElementById('bsEmoji').value.trim();
+  if(ttl)document.getElementById('bannerTtl').textContent=ttl;
+  if(sub)document.getElementById('bannerSub').textContent=sub;
+  if(em)document.getElementById('bannerEmoji').textContent=em;
+  const grad=`linear-gradient(135deg,${bannerColor} 0%,${bannerColor}cc 50%,${bannerColor} 100%)`;
+  document.getElementById('bannerBg').style.background=grad;
+  if(bannerImgData){
+    const img=document.getElementById('bannerImg');img.src=bannerImgData;img.style.display='block';
+    document.getElementById('bannerBg').style.display='none';
+  }
+  renderRemain();renderStats();closeSettings();
+}
+
+function closeSettings(){document.getElementById('settingsOverlay').classList.remove('open')}
+
+function doReset(){
+  PRIZES.forEach(p=>{counts[p.id]=p.cnt;probs[p.id]=p.prob});
+  wonMap={};spinCnt=0;totalPts=0;partCnt=0;tapCount=0;
+  ticketLeft=parseInt(document.getElementById('ticketInput').value)||1;
+  document.getElementById('resultWrap').innerHTML='';
+  renderRemain();syncTicket();renderStats();renderLog();
+}
+
+init();
+</script>
